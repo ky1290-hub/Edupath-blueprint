@@ -165,60 +165,77 @@
 
     .shell {
       display: flex; flex-direction: column;
-      height: auto; padding: 10px; gap: 10px; overflow: visible;
+      height: auto; padding: 8px; gap: 8px; overflow: visible;
     }
 
-    /* 좌패널 */
-    .left { height: auto; gap: 10px; }
-    .nav-card { padding: 14px 12px; }
+    /* 좌패널: 세로 배치 */
+    .left {
+      height: auto;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-    /* 로고 — 크기 고정으로 찌그러짐 방지 */
+    /* 메뉴 박스 */
+    .nav-card { padding: 14px; }
     .logo-row { margin-bottom: 12px; padding-bottom: 10px; }
     .logo-mark {
-      width: 28px !important;
-      height: 28px !important;
-      min-width: 28px;
-      flex-shrink: 0;
+      width: 26px !important; height: 26px !important;
+      min-width: 26px; flex-shrink: 0;
     }
     .logo-mark svg { width: 100%; height: 100%; }
-    .logo-name { font-size: 16px; }
+    .logo-name { font-size: 15px; }
 
-    /* 네비 — 세로 유지 */
-    nav { flex-direction: column; }
+    /* 네비 — 2열 그리드 */
+    nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
     nav a {
-      font-size: 10px;
-      padding: 9px 0;
-      flex: none;
-      width: 100%;
-      border-right: none !important;
+      font-size: 9px;
+      padding: 9px 8px;
+      letter-spacing: .06em;
+      border-bottom: 1px solid var(--rule);
+      border-left: 2px solid transparent;
+      transition: border-color .2s, background .2s;
+      position: relative;
     }
-    nav a .tick { display: inline-block; }
+    nav a::after {
+      content: '→';
+      position: absolute;
+      right: 6px;
+      font-size: 9px;
+      color: var(--ink-light);
+    }
+    nav a:nth-child(odd) { border-right: 1px solid var(--rule); }
+    nav a:nth-last-child(-n+2) { border-bottom: none; }
+    nav a .tick { display: none; }
+    nav a.active {
+      border-left: 2px solid var(--green);
+      color: var(--green);
+      background: var(--gdim);
+    }
+    nav a.active::after { color: var(--green); }
 
-    .btn-demo { padding: 11px 12px; font-size: 10px; margin-top: 10px; }
+    .btn-demo { padding: 10px 12px; font-size: 9.5px; margin-top: 10px; }
 
-    /* title-block */
-    .title-block { flex: none; height: auto; }
-    .tb-row { flex: none; min-height: 52px; }
+    /* 숫자 박스 — Core Philosophy, metrics 숨김 */
+    .title-block { flex: none; height: auto; overflow: hidden; }
+    .tb-row { flex: none; min-height: 0; }
     .tb-cell { padding: 8px 10px; }
-    .tb-label { font-size: 7px; }
+    .tb-label { font-size: 7px; margin-bottom: 2px; }
     .tb-val { font-size: 11px; }
+    .tb-val.g { font-size: 11px; }
 
-    /* metrics */
-    .metrics-row { margin-top: 0; }
-    .metric { padding: 10px; gap: 4px; }
-    .metric-val { font-size: 26px; }
-    .metric-val span { font-size: 11px; }
-    .metric-lbl { font-size: 7px; }
-    .m-chart-wrap { height: 12px; }
+    /* Core Philosophy 행 숨김 */
+    .tb-cell.gt { display: none; }
+    .tb-row:has(.tb-cell.gt) { display: none; }
 
-    /* 우패널 — SVG를 화면에 맞게 축소 */
-    .right {
-      min-height: 50vw;
-      overflow: visible;
-      display: block;
-    }
+    /* metrics 숨김 */
+    .metrics-row { display: none; }
 
-    /* SVG: viewBox 비율 유지하며 화면 너비에 맞게 축소 */
+    /* 우패널 */
+    .right { overflow: visible; display: block; }
     .svg-canvas {
       width: 100% !important;
       min-width: unset !important;
@@ -226,13 +243,10 @@
       height: auto !important;
       display: block;
     }
-
     #view-diagram, #view-architecture, #view-b2b,
     #view-partners, #view-cases, #view-demo {
-      position: relative;
-      min-height: auto;
-      overflow: visible;
-      transition: none !important;
+      position: relative; min-height: auto;
+      overflow: visible; transition: none !important;
     }
   }
 
@@ -1128,32 +1142,32 @@
 
         <!-- 헤더 -->
         <text x="716" y="128" text-anchor="middle" class="tech-anno di1" fill="#10b981">[SYS: CONTACT_INTAKE_OPEN]</text>
-        <text x="716" y="166" text-anchor="middle" font-family="'Playfair Display', serif" font-size="28" font-weight="900" fill="#0f172a" class="di2">Request a Demo</text>
-        <line x1="500" y1="182" x2="932" y2="182" class="dl di2"/>
+        <text x="716" y="162" text-anchor="middle" font-family="'Playfair Display', serif" font-size="28" font-weight="900" fill="#0f172a" class="di2">Request a Demo</text>
+        <line x1="500" y1="180" x2="932" y2="180" class="dl di2"/>
 
         <!-- 주소 -->
-        <text x="516" y="210" class="tech-anno di3" fill="#10b981">ADDR_01: PHYSICAL</text>
-        <text x="516" y="236" class="arch di3" font-size="18" fill="#0f172a">5687 Yew St #301</text>
-        <text x="516" y="260" class="arch di3" font-size="18" fill="#0f172a">Vancouver, BC  V6M 3Y2</text>
-        <line x1="500" y1="278" x2="932" y2="278" class="dl di3"/>
+        <text x="516" y="208" class="tech-anno di3" fill="#10b981">ADDR_01: PHYSICAL</text>
+        <text x="516" y="230" class="arch di3" font-size="15" fill="#0f172a">5687 Yew St #301</text>
+        <text x="516" y="250" class="arch di3" font-size="15" fill="#0f172a">Vancouver, BC  V6M 3Y2</text>
+        <line x1="500" y1="268" x2="932" y2="268" class="dl di3"/>
 
         <!-- 이메일 -->
-        <text x="516" y="306" class="tech-anno di4" fill="#10b981">ADDR_02: DIGITAL</text>
-        <text x="516" y="340" class="arch di4" font-size="22" fill="#0f172a">info@edupathvan.com</text>
-        <line x1="500" y1="360" x2="932" y2="360" class="dl di4"/>
+        <text x="516" y="296" class="tech-anno di4" fill="#10b981">ADDR_02: DIGITAL</text>
+        <text x="516" y="318" class="arch di4" font-size="15" fill="#0f172a">info@edupathvan.com</text>
+        <line x1="500" y1="336" x2="932" y2="336" class="dl di4"/>
 
         <!-- 운영 안내 -->
-        <text x="516" y="388" class="tech-anno di5" fill="#10b981">STATUS_01: AVAILABILITY</text>
-        <text x="516" y="412" class="arch di5" font-size="13" fill="#64748b">Demo sessions available Mon – Fri</text>
-        <text x="516" y="432" class="arch di5" font-size="13" fill="#64748b">Response within 24 hours guaranteed</text>
-        <line x1="500" y1="450" x2="932" y2="450" class="dl di5"/>
+        <text x="516" y="364" class="tech-anno di5" fill="#10b981">STATUS_01: AVAILABILITY</text>
+        <text x="516" y="386" class="arch di5" font-size="13" fill="#64748b">Demo sessions available Mon – Fri</text>
+        <text x="516" y="406" class="arch di5" font-size="13" fill="#64748b">Response within 24 hours guaranteed</text>
+        <line x1="500" y1="424" x2="932" y2="424" class="dl di5"/>
 
         <!-- 초대 메시지 -->
-        <text x="516" y="476" class="tech-anno di6" fill="#10b981">MSG_01: INVITATION</text>
-        <text x="716" y="516" text-anchor="middle" class="cav di7" font-size="20" fill="#10b981">Come see the Blueprint in action.</text>
-        <text x="716" y="542" text-anchor="middle" class="cav di7" font-size="20" fill="#10b981">Your students deserve this.</text>
-        <line x1="500" y1="562" x2="932" y2="562" class="dl di7"/>
-        <text x="516" y="578" class="tech-anno di8">PACER_ENGINE: v2.4 · INTAKE: OPEN · NO COMMITMENT REQUIRED</text>
+        <text x="516" y="452" class="tech-anno di6" fill="#10b981">MSG_01: INVITATION</text>
+        <text x="516" y="474" class="arch di7" font-size="13" fill="#64748b">Come see the Blueprint in action.</text>
+        <text x="516" y="494" class="arch di7" font-size="13" fill="#64748b">Your students deserve this.</text>
+        <line x1="500" y1="512" x2="932" y2="512" class="dl di7"/>
+        <text x="516" y="528" class="tech-anno di8">PACER_ENGINE: v2.4 · INTAKE: OPEN · NO COMMITMENT REQUIRED</text>
 
         <!-- ══ BOTTOM SPEC ══ -->
         <rect x="28" y="634" width="904" height="62" class="sb" style="fill:rgba(248,250,252,0.6); animation-delay:0.3s"/>
