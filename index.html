@@ -87,13 +87,28 @@
 
   /* ── RIGHT ── */
   .right{border:1.5px solid var(--rule-s);background:rgba(255,255,255,.15);
-    backdrop-filter:blur(3px);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    backdrop-filter:blur(3px);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    -webkit-overflow-scrolling:touch;}
   .right::before,.right::after{content:'';position:absolute;width:13px;height:13px;
-    border-color:var(--ink);border-style:solid;pointer-events:none}
+    border-color:var(--ink);border-style:solid;pointer-events:none;z-index:20;}
   .right::before{top:6px;left:6px;border-width:1.5px 0 0 1.5px}
   .right::after{bottom:6px;right:6px;border-width:0 1.5px 1.5px 0}
   
   .svg-canvas{max-width:100%;max-height:95%;height:auto;width:auto;display:block;margin:auto}
+
+  /* 모바일 가로 스크롤 힌트 */
+  @media (max-width: 767px) {
+    .right::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 32px; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(248,250,252,0.6));
+      pointer-events: none;
+      z-index: 15;
+      border: none;
+    }
+  }
 
   /* ── VIEW CONTAINERS ── */
   #view-diagram, #view-architecture, #view-b2b, #view-partners, #view-cases, #view-demo {
@@ -104,15 +119,121 @@
     display: flex; opacity: 1;
   }
 
-  /* 📱 반응형 적용 */
+  /* ─────────────────────────────────────────
+     📱 RESPONSIVE — 3단계 브레이크포인트
+     Desktop  : 1024px+  (현재 레이아웃 유지)
+     Tablet   : 768–1024px
+     Mobile   : ~767px
+  ───────────────────────────────────────── */
+
+  /* ── TABLET (768px ~ 1024px) ── */
   @media (max-width: 1024px) {
-    html,body{height:auto;overflow-y:auto}
-    .shell { display: flex; flex-direction: column; height: auto; padding: 14px; gap: 14px; overflow: visible; }
-    .right { min-height: 80vh; overflow: visible; display: block; }
-    .svg-canvas { width: 100%; min-width: 850px; max-height: none; height: auto; }
-    #view-diagram, #view-architecture { position: relative; min-height: 100vh; }
-    .title-block { height: auto; flex: none; }
-    .tb-row { flex: none; min-height: 80px; }
+    html, body { height: auto; overflow-y: auto; overflow-x: hidden; }
+
+    .shell {
+      display: flex; flex-direction: column;
+      height: auto; padding: 14px; gap: 14px; overflow: visible;
+    }
+    .left { height: auto; }
+    .title-block { flex: none; height: auto; }
+    .tb-row { flex: none; min-height: 64px; }
+    .metrics-row { margin-top: 0; }
+
+    .right {
+      min-height: 75vh;
+      overflow-x: auto;
+      overflow-y: visible;
+      display: block;
+    }
+    .svg-canvas {
+      width: 100%;
+      min-width: 760px;
+      max-height: none;
+      height: auto;
+      display: block;
+    }
+    #view-diagram, #view-architecture, #view-b2b,
+    #view-partners, #view-cases, #view-demo {
+      position: relative;
+      min-height: 70vh;
+    }
+  }
+
+  /* ── MOBILE (~767px) ── */
+  @media (max-width: 767px) {
+    html, body { height: auto; overflow-y: auto; overflow-x: hidden; }
+
+    .shell {
+      display: flex; flex-direction: column;
+      height: auto; padding: 10px; gap: 10px; overflow: visible;
+    }
+
+    /* 좌패널 */
+    .left { height: auto; gap: 10px; }
+    .nav-card { padding: 14px 12px; }
+
+    /* 로고 — 크기 고정으로 찌그러짐 방지 */
+    .logo-row { margin-bottom: 12px; padding-bottom: 10px; }
+    .logo-mark {
+      width: 28px !important;
+      height: 28px !important;
+      min-width: 28px;
+      flex-shrink: 0;
+    }
+    .logo-mark svg { width: 100%; height: 100%; }
+    .logo-name { font-size: 16px; }
+
+    /* 네비 — 세로 유지 */
+    nav { flex-direction: column; }
+    nav a {
+      font-size: 10px;
+      padding: 9px 0;
+      flex: none;
+      width: 100%;
+      border-right: none !important;
+    }
+    nav a .tick { display: inline-block; }
+
+    .btn-demo { padding: 11px 12px; font-size: 10px; margin-top: 10px; }
+
+    /* title-block */
+    .title-block { flex: none; height: auto; }
+    .tb-row { flex: none; min-height: 52px; }
+    .tb-cell { padding: 8px 10px; }
+    .tb-label { font-size: 7px; }
+    .tb-val { font-size: 11px; }
+
+    /* metrics */
+    .metrics-row { margin-top: 0; }
+    .metric { padding: 10px; gap: 4px; }
+    .metric-val { font-size: 26px; }
+    .metric-val span { font-size: 11px; }
+    .metric-lbl { font-size: 7px; }
+    .m-chart-wrap { height: 12px; }
+
+    /* 우패널 — SVG를 화면에 맞게 축소 */
+    .right {
+      min-height: 50vw;
+      overflow: visible;
+      display: block;
+    }
+
+    /* SVG: viewBox 비율 유지하며 화면 너비에 맞게 축소 */
+    .svg-canvas {
+      width: 100% !important;
+      min-width: unset !important;
+      max-width: 100%;
+      height: auto !important;
+      display: block;
+    }
+
+    #view-diagram, #view-architecture, #view-b2b,
+    #view-partners, #view-cases, #view-demo {
+      position: relative;
+      min-height: auto;
+      overflow: visible;
+      transition: none !important;
+    }
   }
 
   @keyframes draw{to{stroke-dashoffset:0}}
@@ -233,7 +354,7 @@
 
         <!-- 테크니컬 주석 -->
         <text x="35" y="605" class="tech-anno">LAT:49.2827 / LON:-123.1207</text>
-        <text x="475" y="575" class="tech-anno">Q_STATUS: OPTIMAL</text>
+        <text x="925" y="605" text-anchor="end" class="tech-anno">Q_STATUS: OPTIMAL</text>
 
         <!-- STAGE LABELS (번호 위, 주석 아래 / 모두 컬럼 중앙 정렬) -->
         <text x="107" y="32" text-anchor="middle" class="ui fx" font-size="8.5" fill="#94a3b8" style="animation-delay:.7s">01 — INPUT</text>
@@ -1052,48 +1173,53 @@
 </div>
 
 <script>
+  const views = {
+    diagram:      document.getElementById('view-diagram'),
+    architecture: document.getElementById('view-architecture'),
+    b2b:          document.getElementById('view-b2b'),
+    partners:     document.getElementById('view-partners'),
+    cases:        document.getElementById('view-cases'),
+    demo:         document.getElementById('view-demo'),
+  };
+  const navMap = {
+    architecture: document.getElementById('nav-arch'),
+    b2b:          document.getElementById('nav-b2b'),
+    partners:     document.getElementById('nav-partners'),
+    cases:        document.getElementById('nav-cases'),
+  };
+
   function switchView(viewId) {
-    const diagView     = document.getElementById('view-diagram');
-    const archView     = document.getElementById('view-architecture');
-    const b2bView      = document.getElementById('view-b2b');
-    const partnersView = document.getElementById('view-partners');
-    const casesView    = document.getElementById('view-cases');
-    const demoView     = document.getElementById('view-demo');
-    const navArch      = document.getElementById('nav-arch');
-    const navB2b       = document.getElementById('nav-b2b');
-    const navPartners  = document.getElementById('nav-partners');
-    const navCases     = document.getElementById('nav-cases');
+    // 모든 뷰 숨기기
+    Object.values(views).forEach(v => {
+      v.style.display = 'none';
+      v.classList.remove('show');
+    });
+    // 모든 nav active 해제
+    Object.values(navMap).forEach(n => { if(n) n.classList.remove('active'); });
 
-    // Reset All
-    [diagView, archView, b2bView, partnersView, casesView, demoView].forEach(v => { v.style.display = 'none'; v.classList.remove('show'); });
-    [navArch, navB2b, navPartners, navCases].forEach(n => n.classList.remove('active'));
+    const target = views[viewId] || views['diagram'];
+    const isMobile = window.innerWidth <= 767;
 
-    if (viewId === 'architecture') {
-      archView.style.display = 'flex';
-      setTimeout(() => archView.classList.add('show'), 10);
-      navArch.classList.add('active');
-    } else if (viewId === 'b2b') {
-      b2bView.style.display = 'flex';
-      setTimeout(() => b2bView.classList.add('show'), 10);
-      navB2b.classList.add('active');
-    } else if (viewId === 'partners') {
-      partnersView.style.display = 'flex';
-      setTimeout(() => partnersView.classList.add('show'), 10);
-      navPartners.classList.add('active');
-    } else if (viewId === 'cases') {
-      casesView.style.display = 'flex';
-      setTimeout(() => casesView.classList.add('show'), 10);
-      navCases.classList.add('active');
-    } else if (viewId === 'demo') {
-      demoView.style.display = 'flex';
-      setTimeout(() => demoView.classList.add('show'), 10);
+    target.style.display = 'flex';
+
+    if (isMobile) {
+      // 모바일: transition 없이 즉시 표시
+      target.classList.add('show');
+      // 우패널로 부드럽게 스크롤
+      target.closest('.right').scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-      diagView.style.display = 'flex';
-      setTimeout(() => diagView.classList.add('show'), 10);
+      // 데스크탑: 기존 fade 유지
+      setTimeout(() => target.classList.add('show'), 10);
     }
+
+    if (navMap[viewId]) navMap[viewId].classList.add('active');
   }
 
-  // 초기 상태 설정
+  // nav 링크 기본 동작 방지 (페이지 이동 방지)
+  document.querySelectorAll('nav a').forEach(a => {
+    a.addEventListener('click', e => e.preventDefault());
+  });
+
   window.onload = () => switchView('diagram');
 </script>
 </body>
